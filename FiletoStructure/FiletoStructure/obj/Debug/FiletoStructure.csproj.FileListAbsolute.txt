@@ -1,0 +1,15 @@
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\bin\Debug\FiletoStructure.exe.config
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\bin\Debug\FiletoStructure.exe
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\bin\Debug\FiletoStructure.pdb
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\MainWindow.g.cs
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\App.g.cs
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure_MarkupCompile.cache
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure_MarkupCompile.lref
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\MainWindow.baml
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.g.resources
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.Properties.Resources.resources
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.csproj.GenerateResource.cache
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.csproj.CoreCompileInputs.cache
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.exe
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.pdb
+C:\Users\Alex\source\repos\FiletoStructure\FiletoStructure\obj\Debug\FiletoStructure.csprojAssemblyReference.cache
