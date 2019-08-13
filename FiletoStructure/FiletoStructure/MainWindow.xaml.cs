@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MessageBox = System.Windows.Forms.MessageBox;
 using Path = System.IO.Path;
 
 namespace FiletoStructure
@@ -23,69 +24,63 @@ namespace FiletoStructure
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        MainWindowLogic mwl;
+
         public MainWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+                mwl = new MainWindowLogic();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
+            }
+            
         }
 
         private void BtnDir_Click(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.ShowDialog();
-            txtbxDir.Text = fbd.SelectedPath;
+            try
+            {
+                txtbxDir.Text = mwl.ChooseDirectory();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
+            }
+            
         }
 
         private void BtnFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.ShowDialog();
-            txtbxFile.Text = ofd.FileName;
+            try
+            {
+                txtbxFile.Text = mwl.ChooseFile();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(txtbxDir.Text != "" && txtbxFile.Text != "")
-            {
-                CreateFiles(txtbxDir.Text, txtbxFile.Text);
-            }
-        }
-
-        private void CreateFiles(string dir, string file)
-        {
             try
             {
-                string line = "";
-                int sublevel = 0;
-                int newlevel = 0;
-                string[] newdir = new string[20];
-                using (StreamReader sr = new StreamReader(file))
+                if (txtbxDir.Text != "" && txtbxFile.Text != "")
                 {
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        newlevel = line.LastIndexOf("\t") + 1;
-                        if (newlevel <= sublevel && newdir[sublevel] != null)
-                        {
-                            Directory.CreateDirectory(newdir[sublevel]);
-                        }
-                        if (newlevel > 0)
-                        {
-                            newdir[newlevel] = Path.Combine(newdir[newlevel - 1], line.Remove(0, newlevel));
-                        }
-                        else
-                        {
-                            newdir[newlevel] = Path.Combine(dir, line.Remove(0, newlevel));
-                        }
-                        sublevel = newlevel;
-                    }
-                    Directory.CreateDirectory(newdir[newlevel]);
+                    mwl.CreateFiles(txtbxDir.Text, txtbxFile.Text);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
             }
-            //System.IO.Directory.CreateDirectory(dir);
+            
         }
+
     }
 }
