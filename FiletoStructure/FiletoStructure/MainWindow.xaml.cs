@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -32,6 +34,9 @@ namespace FiletoStructure
             try
             {
                 InitializeComponent();
+                imgFolderWarning.Source = Imaging.CreateBitmapSourceFromHBitmap(SystemIcons.Warning.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty,BitmapSizeOptions.FromEmptyOptions());
+                imgOutlineWarning.Source = Imaging.CreateBitmapSourceFromHBitmap(SystemIcons.Warning.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty,BitmapSizeOptions.FromEmptyOptions());
+                HideWarnings();
                 mwl = new MainWindowLogic();
             }
             catch (Exception ex)
@@ -39,6 +44,23 @@ namespace FiletoStructure
                 MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
             }
             
+        }
+
+        private void HideWarnings()
+        {
+            try
+            {
+                imgFolderWarning.Visibility = Visibility.Hidden;
+                lblFolderWarning.Visibility = Visibility.Hidden;
+                imgOutlineWarning.Visibility = Visibility.Hidden;
+                lblOutlineWarning.Visibility = Visibility.Hidden;
+                cbReplace.Visibility = Visibility.Hidden;
+                lblReplace.Visibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Search Window could not be opened\n" + ex.ToString());
+            }
         }
 
         private void BtnDir_Click(object sender, RoutedEventArgs e)
