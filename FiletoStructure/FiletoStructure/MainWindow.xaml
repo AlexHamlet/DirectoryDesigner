@@ -5,23 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FiletoStructure"
         mc:Ignorable="d"
-        Title="Create Directory Structure" Height="339.971" Width="277.435">
+        Title="Create Directory Structure" Height="280.771" Width="531.835">
     <Grid>
-        <TextBox x:Name="txtbxDir" HorizontalAlignment="Left" Height="23" Margin="22,52,0,0" VerticalAlignment="Top" Width="223" TextChanged="TxtbxDir_TextChanged"/>
+        <TextBox x:Name="txtbxDir" HorizontalAlignment="Left" Height="23" Margin="22,52,0,0" VerticalAlignment="Top" Width="484" TextChanged="TxtbxDir_TextChanged" LostFocus="TxtbxDir_LostFocus" GotFocus="TxtbxDir_GotFocus"/>
         <Label Content="Top Level Folder Location" HorizontalAlignment="Left" Margin="21,21,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnDir" Content="Browse" HorizontalAlignment="Left" Margin="170,24,0,0" VerticalAlignment="Top" Width="75" Click="BtnDir_Click"/>
-        <TextBox x:Name="txtbxFile" HorizontalAlignment="Left" Height="23" Margin="22,111,0,0" VerticalAlignment="Top" Width="223" TextChanged="TxtbxFile_TextChanged"/>
+        <Button x:Name="btnDir" Content="Browse" HorizontalAlignment="Left" Margin="431,24,0,0" VerticalAlignment="Top" Width="75" Click="BtnDir_Click"/>
+        <TextBox x:Name="txtbxFile" HorizontalAlignment="Left" Height="23" Margin="22,111,0,0" VerticalAlignment="Top" Width="484" TextChanged="TxtbxFile_TextChanged" GotFocus="TxtbxFile_GotFocus" LostFocus="TxtbxFile_LostFocus"/>
         <Label Content="Select Directory Outline" HorizontalAlignment="Left" Margin="22,80,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnFile" Content="Browse" HorizontalAlignment="Left" Margin="170,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnFile_Click"/>
-        <Button Content="Make Directories" HorizontalAlignment="Left" Margin="22,272,0,0" VerticalAlignment="Top" Width="108" Click="Button_Click"/>
-        <TextBlock x:Name="lblOutlineWarning" HorizontalAlignment="Left" Margin="66,178,0,0" TextWrapping="Wrap" Text="Invalid Characters detected in directory outline." VerticalAlignment="Top" Width="180"/>
-        <Image x:Name="imgOutlineWarning" HorizontalAlignment="Left" Height="32" Margin="23,178,0,0" VerticalAlignment="Top" Width="32" Source="System.Drawing.SystemIcons.Warning."/>
-        <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="36,215,0,0" VerticalAlignment="Top"/>
-        <TextBlock x:Name="lblReplace" HorizontalAlignment="Left" Margin="66,214,0,0" TextWrapping="Wrap" Text="Replace invalid characters with underscore" VerticalAlignment="Top"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="170,272,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="36,251,0,0" TextWrapping="Wrap" Text="Longest new Path is 0 characters long." VerticalAlignment="Top"/>
-        <TextBlock x:Name="lblFolderWarning" HorizontalAlignment="Left" Margin="65,139,0,0" TextWrapping="Wrap" Text="Invalid finlepath entered for the top level folder location" VerticalAlignment="Top" Width="173"/>
-        <Image x:Name="imgFolderWarning" HorizontalAlignment="Left" Height="32" Margin="21,139,0,0" VerticalAlignment="Top" Width="32" Source="System.Drawing.SystemIcons.Warning."/>
+        <Button x:Name="btnFile" Content="Browse" HorizontalAlignment="Left" Margin="431,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnFile_Click"/>
+        <Button Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" Click="Button_Click"/>
+        <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <TextBlock x:Name="lblReplace" HorizontalAlignment="Left" Margin="58,194,0,0" TextWrapping="Wrap" Text="Replace invalid characters with underscore" VerticalAlignment="Top" Visibility="Hidden"/>
+        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="431,221,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="180,223,0,0" TextWrapping="Wrap" Text="Longest new Path is 0 characters long." VerticalAlignment="Top"/>
+        <Image x:Name="imgWarning" HorizontalAlignment="Left" Height="32" Margin="21,139,0,0" VerticalAlignment="Top" Width="32" Visibility="Hidden"/>
+        <ScrollViewer x:Name="scrError" HorizontalAlignment="Left" Height="50" Margin="58,139,0,0" VerticalAlignment="Top" Width="448" BorderBrush="Black" BorderThickness="0" Visibility="Hidden"/>
+        <Button x:Name="btnShowMe" Content="Show Me" HorizontalAlignment="Left" Margin="431,192,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
 
     </Grid>
 </Window>

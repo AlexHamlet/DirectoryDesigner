@@ -35,9 +35,7 @@ namespace FiletoStructure
             try
             {
                 InitializeComponent();
-                imgFolderWarning.Source = Imaging.CreateBitmapSourceFromHBitmap(SystemIcons.Warning.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty,BitmapSizeOptions.FromEmptyOptions());
-                imgOutlineWarning.Source = Imaging.CreateBitmapSourceFromHBitmap(SystemIcons.Warning.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty,BitmapSizeOptions.FromEmptyOptions());
-                HideWarnings();
+                imgWarning.Source = Imaging.CreateBitmapSourceFromHBitmap(SystemIcons.Warning.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 DirectoryFlag = false;
                 OutlineFlag = false;
                 mwl = new MainWindowLogic();
@@ -46,47 +44,36 @@ namespace FiletoStructure
             {
                 MessageBox.Show("Something went wrong!\n" + ex.ToString());
             }
-            
+
         }
 
-        private void HideWarnings()
+        private void RefreshWarnings()
         {
             try
             {
-                imgFolderWarning.Visibility = Visibility.Hidden;
-                lblFolderWarning.Visibility = Visibility.Hidden;
-                imgOutlineWarning.Visibility = Visibility.Hidden;
-                lblOutlineWarning.Visibility = Visibility.Hidden;
+                imgWarning.Visibility = Visibility.Hidden;
                 cbReplace.Visibility = Visibility.Hidden;
                 lblReplace.Visibility = Visibility.Hidden;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Something went wrong!\n" + ex.ToString());
-            }
-        }
+                btnShowMe.Visibility = Visibility.Hidden;
+                scrError.Visibility = Visibility.Hidden;
+                string errormessage = "";
+                if (!DirectoryFlag && txtbxDir.Text != "")
+                {
+                    errormessage += "Top level path not found" + Environment.NewLine;
+                    imgWarning.Visibility = Visibility.Visible;
+                    scrError.Visibility = Visibility.Visible;
+                }
+                if (!OutlineFlag && txtbxFile.Text != "")
+                {
+                    errormessage += "Outline file not found" + Environment.NewLine;
+                    lblReplace.Visibility = Visibility.Visible;
+                    scrError.Visibility = Visibility.Visible;
+                    imgWarning.Visibility = Visibility.Visible;
+                    btnShowMe.Visibility = Visibility.Visible;
+                    cbReplace.Visibility = Visibility.Visible;
+                }
+                scrError.Content = errormessage;
 
-        private void ShowFolderWarning()
-        {
-            try
-            {
-                imgFolderWarning.Visibility = Visibility.Visible;
-                lblFolderWarning.Visibility = Visibility.Visible;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Something went wrong!\n" + ex.ToString());
-            }
-        }
-
-        private void ShowOutlineWarning()
-        {
-            try
-            {
-                imgOutlineWarning.Visibility = Visibility.Visible;
-                lblOutlineWarning.Visibility = Visibility.Visible;
-                cbReplace.Visibility = Visibility.Visible;
-                lblReplace.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -98,13 +85,18 @@ namespace FiletoStructure
         {
             try
             {
-                txtbxDir.Text = mwl.ChooseDirectory();
+                string dir = mwl.ChooseDirectory(txtbxDir.Text);
+                if (dir != "")
+                {
+                    txtbxDir.Text = dir;
+                    txtbxDir.Focus();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Something went wrong!\n" + ex.ToString());
             }
-            
+
         }
 
         private void BtnFile_Click(object sender, RoutedEventArgs e)
@@ -112,6 +104,7 @@ namespace FiletoStructure
             try
             {
                 txtbxFile.Text = mwl.ChooseFile();
+                txtbxFile.Focus();
             }
             catch (Exception ex)
             {
@@ -125,8 +118,8 @@ namespace FiletoStructure
             {
                 if (DirectoryFlag && OutlineFlag)
                 {
-                    //mwl.CreateFiles(txtbxDir.Text, txtbxFile.Text);
-                    this.Close();
+                    mwl.CreateFiles(txtbxDir.Text, txtbxFile.Text);
+                    //this.Close();
                 }
                 else
                 {
@@ -137,26 +130,71 @@ namespace FiletoStructure
             {
                 MessageBox.Show("Something went wrong!\n" + ex.ToString());
             }
-            
+
         }
 
         private void TxtbxDir_TextChanged(object sender, TextChangedEventArgs e)
         {
+            //try
+            //{
+            //    if (!Directory.Exists(txtbxDir.Text))
+            //    {
+            //        ShowFolderWarning();
+            //        DirectoryFlag = false;
+            //    }
+            //    else
+            //    {
+            //        HideWarnings();
+            //        DirectoryFlag = true;
+            //    }
+            //    if (!OutlineFlag && txtbxFile.Text != "")
+            //    {
+            //        ShowOutlineWarning();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Something went wrong!\n" + ex.ToString());
+            //}
+        }
+
+        private void TxtbxFile_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //try
+            //{
+            //    if (!File.Exists(txtbxFile.Text))
+            //    {
+            //        ShowOutlineWarning();
+            //        OutlineFlag = false;
+            //    }
+            //    else
+            //    {
+            //        HideWarnings();
+            //        OutlineFlag = true;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Something went wrong!\n" + ex.ToString());
+            //}
+        }
+
+        private void TxtbxDir_LostFocus(object sender, RoutedEventArgs e)
+        {
             try
             {
-                if (!Directory.Exists(txtbxDir.Text))
+                if (txtbxDir.Text != "")
                 {
-                    ShowFolderWarning();
-                    DirectoryFlag = false;
-                }
-                else
-                {
-                    HideWarnings();
-                    DirectoryFlag = true;
-                }
-                if (!OutlineFlag && txtbxFile.Text != "")
-                {
-                    ShowOutlineWarning();
+                    if (!Directory.Exists(txtbxDir.Text))
+                    {
+                        DirectoryFlag = false;
+                        RefreshWarnings();
+                    }
+                    else
+                    {
+                        DirectoryFlag = true;
+                        RefreshWarnings();
+                    }
                 }
             }
             catch (Exception ex)
@@ -165,23 +203,48 @@ namespace FiletoStructure
             }
         }
 
-        private void TxtbxFile_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtbxDir_GotFocus(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!File.Exists(txtbxFile.Text))
+                DirectoryFlag = true;
+                RefreshWarnings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong!\n" + ex.ToString());
+            }
+        }
+
+        private void TxtbxFile_GotFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OutlineFlag = true;
+                RefreshWarnings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong!\n" + ex.ToString());
+            }
+        }
+
+        private void TxtbxFile_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (txtbxFile.Text != "")
                 {
-                    ShowOutlineWarning();
-                    OutlineFlag = false;
-                }
-                else
-                {
-                    HideWarnings();
-                    OutlineFlag = true;
-                }
-                if (!DirectoryFlag && txtbxDir.Text != "")
-                {
-                    ShowFolderWarning();
+                    if (!File.Exists(txtbxFile.Text))
+                    {
+                        OutlineFlag = false;
+                        RefreshWarnings();
+                    }
+                    else
+                    {
+                        OutlineFlag = true;
+                        RefreshWarnings();
+                    }
                 }
             }
             catch (Exception ex)
