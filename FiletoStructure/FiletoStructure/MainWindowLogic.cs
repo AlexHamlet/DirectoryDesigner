@@ -11,12 +11,37 @@ namespace FiletoStructure
 {
     class MainWindowLogic
     {
+        //Holds the characterlength of the longest creatable filepath
+        public int longestpath;
+        //Holds a message about the outline
+        public string OutlineStatus;
+        //stores valid/invalid paths from the outline
+        private Queue<string> validPaths { get; }
+        private Queue<string> invalidPaths { get; }
+        private Queue<string> invalidMessages { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MainWindowLogic()
+        {
+            longestpath = 0;
+            validPaths = new Queue<string>();
+            invalidPaths = new Queue<string>();
+            invalidMessages = new Queue<string>();
+        }
+
+        /// <summary>
+        /// Allows user to pick a directory
+        /// </summary>
+        /// <param name="currentdir">The name of the directory you wish to start with</param>
+        /// <returns>The chosen directory</returns>
         public string ChooseDirectory(string currentdir)
         {
             try
             {
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
-                if(currentdir != "")
+                if (currentdir != "")
                 {
                     try
                     {
@@ -34,9 +59,30 @@ namespace FiletoStructure
             {
                 throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
-
         }
 
+        /// <summary>
+        /// Allows the user to choose a directory
+        /// </summary>
+        /// <returns>The chosen directory</returns>
+        public string ChooseDirectory()
+        {
+            try
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                fbd.ShowDialog();
+                return fbd.SelectedPath;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to choose a file
+        /// </summary>
+        /// <returns>The filepath of the chosen file</returns>
         public string ChooseFile()
         {
             try
@@ -52,14 +98,16 @@ namespace FiletoStructure
 
         }
 
-        public void CreateFiles(string dir, string file)
+        /// <summary>
+        /// Checks the outline for errors
+        /// </summary>
+        /// <param name="dir">The directory you want to create the folders in</param>
+        /// <param name="file">The outline containing folder names</param>
+        /// <returns></returns>
+        public Boolean CheckOutline(string dir, string file)
         {
             try
             {
-                //stores valid/invalid paths from the outline
-                Queue<string> validPaths = new Queue<string>();
-                Queue<string> invalidPaths = new Queue<string>();
-                Queue<string> invalidMessages = new Queue<string>();
                 //Used to read from the file
                 string line = "";
                 //Used to keep track of the current folder level
@@ -69,28 +117,19 @@ namespace FiletoStructure
                 int linenum = 0;
                 //Used to create filepaths
                 string[] newdir = new string[20];
+                //Holds return value
+                bool retval = true;
 
                 //Reads file
                 using (StreamReader sr = new StreamReader(file))
                 {
                     while ((line = sr.ReadLine()) != null)
                     {
+                        //Error Checking
                         linenum++;
+                        //Get subdirectory level
                         newlevel = line.LastIndexOf("\t") + 1;
-                        //if (newdir[sublevel] != null)//newlevel <= sublevel && 
-                        //{
-                        //    try
-                        //    {
-                        //        Path.GetFullPath(newdir[sublevel]);
-                        //        validPaths.Enqueue(newdir[sublevel]);
-                        //    }
-                        //    catch (Exception)
-                        //    {
-                        //        invalidPaths.Enqueue(newdir[sublevel]);
-                        //        invalidMessages.Enqueue(newdir[sublevel] + " on line " + linenum);
-                        //    }
 
-                        //}
                         try
                         {
                             if (newlevel > 0)
@@ -109,48 +148,59 @@ namespace FiletoStructure
                         }
                         catch (Exception)
                         {
+                            retval = false;
                             invalidPaths.Enqueue(newdir[newlevel]);
-                            invalidMessages.Enqueue(newdir[newlevel] + " on line " + linenum);
+                            invalidMessages.Enqueue("(" + linenum + ")" + newdir[newlevel]);
                         }
-                        
                     }
-                    //if (Path.GetFullPath(newdir[sublevel]) != null)
-                    //{
-                    //    validPaths.Enqueue(newdir[sublevel]);
-                    //}
-                    //else
-                    //{
-                    //    invalidPaths.Enqueue(newdir[sublevel]);
-                    //}
                 }
+                return retval;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
+        }
 
-                //Makes Directories or notifies
-                if (invalidPaths.Count == 0)
+        /// <summary>
+        /// Creates valid directories from the outline
+        /// </summary>
+        public void CreateFiles()
+        {
+            try
+            {
+                while (validPaths.Count > 0)
                 {
-                    //Create Files
-                    //while (validPaths.Count > 0)
-                    //{
-                    //    Directory.CreateDirectory(validPaths.Dequeue());
-                    //}
-                    MessageBox.Show("Files Created Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    //Echo Error Lines
-                    string invalid = "Incorrect Filepath(s)\n";
-
-                    while (invalidMessages.Count > 0)
-                    {
-                        invalid += invalidMessages.Dequeue() + "\n";
-                    }
-
-                    MessageBox.Show(invalid, "Invalid Filepath Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Directory.CreateDirectory(validPaths.Dequeue());
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Provides a list of errors and where they occur
+        /// </summary>
+        /// <returns>A string of errors</returns>
+        public string ShowMe()
+        {
+            //Makes Directories or notifies
+            if (invalidPaths.Count != 0)
+            {
+                //Echo Error Lines
+                string invalid = "Incorrect Filepath(s)\n";
+
+                while (invalidMessages.Count > 0)
+                {
+                    invalid += invalidMessages.Dequeue() + "\n";
+                }
+
+                MessageBox.Show(invalid, "Invalid Filepath Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return invalid;
+            }
+            return "";
         }
     }
 }

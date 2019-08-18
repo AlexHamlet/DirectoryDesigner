@@ -13,7 +13,7 @@
         <TextBox x:Name="txtbxFile" HorizontalAlignment="Left" Height="23" Margin="22,111,0,0" VerticalAlignment="Top" Width="484" TextChanged="TxtbxFile_TextChanged" GotFocus="TxtbxFile_GotFocus" LostFocus="TxtbxFile_LostFocus"/>
         <Label Content="Select Directory Outline" HorizontalAlignment="Left" Margin="22,80,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnFile" Content="Browse" HorizontalAlignment="Left" Margin="431,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnFile_Click"/>
-        <Button Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" Click="Button_Click"/>
+        <Button x:Name="btnMakeDir" Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" Click="Button_Click"/>
         <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <TextBlock x:Name="lblReplace" HorizontalAlignment="Left" Margin="58,194,0,0" TextWrapping="Wrap" Text="Replace invalid characters with underscore" VerticalAlignment="Top" Visibility="Hidden"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="431,221,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>

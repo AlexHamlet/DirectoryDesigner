@@ -56,12 +56,14 @@ namespace FiletoStructure
                 lblReplace.Visibility = Visibility.Hidden;
                 btnShowMe.Visibility = Visibility.Hidden;
                 scrError.Visibility = Visibility.Hidden;
+                btnMakeDir.IsEnabled = true;
                 string errormessage = "";
                 if (!DirectoryFlag && txtbxDir.Text != "")
                 {
                     errormessage += "Top level path not found" + Environment.NewLine;
                     imgWarning.Visibility = Visibility.Visible;
                     scrError.Visibility = Visibility.Visible;
+                    btnMakeDir.IsEnabled = false;
                 }
                 if (!OutlineFlag && txtbxFile.Text != "")
                 {
@@ -71,6 +73,23 @@ namespace FiletoStructure
                     imgWarning.Visibility = Visibility.Visible;
                     btnShowMe.Visibility = Visibility.Visible;
                     cbReplace.Visibility = Visibility.Visible;
+                    btnMakeDir.IsEnabled = false;
+                }
+                if (!DirectoryFlag && txtbxDir.Text != "" && !OutlineFlag && txtbxFile.Text != "")
+                {
+                    try
+                    {
+                        Directory.Exists(txtbxDir.Text);
+                        File.Exists(txtbxFile.Text);
+                        if(!mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text))
+                        {
+                            errormessage += "Unable to parse file" + Environment.NewLine;
+                            btnMakeDir.IsEnabled = false;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
                 scrError.Content = errormessage;
 
@@ -90,6 +109,7 @@ namespace FiletoStructure
                 {
                     txtbxDir.Text = dir;
                     txtbxDir.Focus();
+                    btnFile.Focus();
                 }
             }
             catch (Exception ex)
@@ -105,6 +125,7 @@ namespace FiletoStructure
             {
                 txtbxFile.Text = mwl.ChooseFile();
                 txtbxFile.Focus();
+                btnMakeDir.Focus();
             }
             catch (Exception ex)
             {
@@ -116,9 +137,10 @@ namespace FiletoStructure
         {
             try
             {
-                if (DirectoryFlag && OutlineFlag)
+                if (DirectoryFlag && OutlineFlag && txtbxDir.Text != "" && txtbxFile.Text != "")
                 {
-                    mwl.CreateFiles(txtbxDir.Text, txtbxFile.Text);
+                    //mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text);
+                    mwl.CreateFiles();
                     //this.Close();
                 }
                 else
