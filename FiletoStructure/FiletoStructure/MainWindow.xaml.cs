@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -68,22 +69,24 @@ namespace FiletoStructure
                 if (!OutlineFlag && txtbxFile.Text != "")
                 {
                     errormessage += "Outline file not found" + Environment.NewLine;
-                    lblReplace.Visibility = Visibility.Visible;
                     scrError.Visibility = Visibility.Visible;
                     imgWarning.Visibility = Visibility.Visible;
-                    btnShowMe.Visibility = Visibility.Visible;
-                    cbReplace.Visibility = Visibility.Visible;
                     btnMakeDir.IsEnabled = false;
                 }
-                if (!DirectoryFlag && txtbxDir.Text != "" && !OutlineFlag && txtbxFile.Text != "")
+                if (DirectoryFlag && txtbxDir.Text != "" && OutlineFlag && txtbxFile.Text != "")
                 {
                     try
                     {
                         Directory.Exists(txtbxDir.Text);
                         File.Exists(txtbxFile.Text);
-                        if(!mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text))
+                        if (!mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text))
                         {
                             errormessage += "Unable to parse file" + Environment.NewLine;
+                            lblReplace.Visibility = Visibility.Visible;
+                            scrError.Visibility = Visibility.Visible;
+                            imgWarning.Visibility = Visibility.Visible;
+                            btnShowMe.Visibility = Visibility.Visible;
+                            cbReplace.Visibility = Visibility.Visible;
                             btnMakeDir.IsEnabled = false;
                         }
                     }
@@ -141,6 +144,7 @@ namespace FiletoStructure
                 {
                     //mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text);
                     mwl.CreateFiles();
+                    Process.Start(txtbxDir.Text);
                     //this.Close();
                 }
                 else
@@ -244,6 +248,18 @@ namespace FiletoStructure
             {
                 OutlineFlag = true;
                 RefreshWarnings();
+                try
+                {
+                    Directory.Exists(txtbxDir.Text);
+                    File.Exists(txtbxFile.Text);
+                    if (true)
+                    {
+                        mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text);
+                    }
+                }
+                catch (Exception)
+                {
+                }
             }
             catch (Exception ex)
             {
@@ -273,6 +289,11 @@ namespace FiletoStructure
             {
                 MessageBox.Show("Something went wrong!\n" + ex.ToString());
             }
+        }
+
+        private void BtnShowMe_Click(object sender, RoutedEventArgs e)
+        {
+            mwl.ShowMe();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

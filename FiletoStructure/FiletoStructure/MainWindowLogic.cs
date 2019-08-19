@@ -16,9 +16,9 @@ namespace FiletoStructure
         //Holds a message about the outline
         public string OutlineStatus;
         //stores valid/invalid paths from the outline
-        private Queue<string> validPaths { get; }
-        private Queue<string> invalidPaths { get; }
-        private Queue<string> invalidMessages { get; }
+        private Queue<string> validPaths;
+        private Queue<string> invalidPaths;
+        private Queue<string> invalidMessages;
 
         /// <summary>
         /// Constructor
@@ -108,6 +108,9 @@ namespace FiletoStructure
         {
             try
             {
+                validPaths.Clear();
+                invalidPaths.Clear();
+                invalidMessages.Clear();
                 //Used to read from the file
                 string line = "";
                 //Used to keep track of the current folder level
