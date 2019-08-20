@@ -13,11 +13,11 @@
         <TextBox x:Name="txtbxFile" HorizontalAlignment="Left" Height="23" Margin="22,111,0,0" VerticalAlignment="Top" Width="484" TextChanged="TxtbxFile_TextChanged" GotFocus="TxtbxFile_GotFocus" LostFocus="TxtbxFile_LostFocus"/>
         <Label Content="Select Directory Outline" HorizontalAlignment="Left" Margin="22,80,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnFile" Content="Browse" HorizontalAlignment="Left" Margin="431,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnFile_Click"/>
-        <Button x:Name="btnMakeDir" Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" Click="Button_Click" IsEnabled="False"/>
+        <Button x:Name="btnMakeDir" Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" IsEnabled="False" Click="BtnMakeDir_Click"/>
         <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <TextBlock x:Name="lblReplace" HorizontalAlignment="Left" Margin="58,194,0,0" TextWrapping="Wrap" Text="Replace invalid characters with underscore" VerticalAlignment="Top" Visibility="Hidden"/>
-        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="431,221,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="180,223,0,0" TextWrapping="Wrap" Text="Longest new Path is 0 characters long." VerticalAlignment="Top"/>
+        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="431,221,0,0" VerticalAlignment="Top" Width="75" Click="BtnCancel_Click"/>
+        <TextBlock x:Name="lblPath" HorizontalAlignment="Left" Margin="180,223,0,0" TextWrapping="Wrap" Text="Longest new Path is 0 characters long." VerticalAlignment="Top"/>
         <Image x:Name="imgWarning" HorizontalAlignment="Left" Height="32" Margin="21,139,0,0" VerticalAlignment="Top" Width="32" Visibility="Hidden"/>
         <ScrollViewer x:Name="scrError" HorizontalAlignment="Left" Height="50" Margin="58,139,0,0" VerticalAlignment="Top" Width="448" BorderBrush="Black" BorderThickness="0" Visibility="Hidden"/>
         <Button x:Name="btnShowMe" Content="Show Me" HorizontalAlignment="Left" Margin="431,192,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Click="BtnShowMe_Click"/>

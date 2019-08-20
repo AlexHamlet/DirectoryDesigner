@@ -13,8 +13,6 @@ namespace FiletoStructure
     {
         //Holds the characterlength of the longest creatable filepath
         public int longestpath;
-        //Holds a message about the outline
-        public string OutlineStatus;
         //stores valid/invalid paths from the outline
         private Queue<string> validPaths;
         private Queue<string> invalidPaths;
@@ -62,32 +60,25 @@ namespace FiletoStructure
         }
 
         /// <summary>
-        /// Allows the user to choose a directory
-        /// </summary>
-        /// <returns>The chosen directory</returns>
-        public string ChooseDirectory()
-        {
-            try
-            {
-                FolderBrowserDialog fbd = new FolderBrowserDialog();
-                fbd.ShowDialog();
-                return fbd.SelectedPath;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Allows the user to choose a file
         /// </summary>
         /// <returns>The filepath of the chosen file</returns>
-        public string ChooseFile()
+        public string ChooseFile(string currentfile)
         {
             try
             {
                 OpenFileDialog ofd = new OpenFileDialog();
+                if (currentfile != "")
+                {
+                    try
+                    {
+                        Path.GetFullPath(currentfile);
+                        ofd.InitialDirectory = currentfile;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
                 ofd.ShowDialog();
                 return ofd.FileName;
             }
@@ -118,6 +109,7 @@ namespace FiletoStructure
                 int newlevel = 0;
                 //Used to provide comprehensive error checking
                 int linenum = 0;
+                longestpath = 0;
                 //Used to create filepaths
                 string[] newdir = new string[20];
                 //Holds return value
@@ -139,12 +131,20 @@ namespace FiletoStructure
                             {
                                 newdir[newlevel] = Path.Combine(newdir[newlevel - 1], line.Remove(0, newlevel));
                                 Path.GetFullPath(newdir[newlevel]);
+                                if(newdir[newlevel].Length > longestpath)
+                                {
+                                    longestpath = newdir[newlevel].Length;
+                                }
                                 validPaths.Enqueue(newdir[newlevel]);
                             }
                             else
                             {
                                 newdir[newlevel] = Path.Combine(dir, line.Remove(0, newlevel));
                                 Path.GetFullPath(newdir[newlevel]);
+                                if (newdir[newlevel].Length > longestpath)
+                                {
+                                    longestpath = newdir[newlevel].Length;
+                                }
                                 validPaths.Enqueue(newdir[newlevel]);
                             }
                             sublevel = newlevel;
