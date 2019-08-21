@@ -16,6 +16,7 @@ namespace FiletoStructure
         //stores valid/invalid paths from the outline
         private Queue<string> validPaths;
         private Queue<string> invalidPaths;
+        private Queue<string> fixedPaths;
         private Queue<string> invalidMessages;
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace FiletoStructure
             longestpath = 0;
             validPaths = new Queue<string>();
             invalidPaths = new Queue<string>();
+            fixedPaths = new Queue<string>();
             invalidMessages = new Queue<string>();
         }
 
@@ -94,7 +96,7 @@ namespace FiletoStructure
         /// </summary>
         /// <param name="dir">The directory you want to create the folders in</param>
         /// <param name="file">The outline containing folder names</param>
-        /// <returns></returns>
+        /// <returns>Wether or not the Outline can be created</returns>
         public Boolean CheckOutline(string dir, string file)
         {
             try
@@ -176,6 +178,10 @@ namespace FiletoStructure
                 {
                     Directory.CreateDirectory(validPaths.Dequeue());
                 }
+                while(fixedPaths.Count > 0)
+                {
+                    //Directory.CreateDirectory(fixedPaths.Dequeue());
+                }
             }
             catch (Exception ex)
             {
@@ -204,6 +210,33 @@ namespace FiletoStructure
                 return invalid;
             }
             return "";
+        }
+
+        public void FixPaths()
+        {
+            //TODO: Exclude <, >, :, ", /, \, |, ?, *
+            try
+            {
+                string pathfixer = "";
+                while (invalidPaths.Count > 0)
+                {
+                    pathfixer = invalidPaths.Dequeue();
+                    pathfixer = pathfixer.Replace("<","_");
+                    pathfixer = pathfixer.Replace(">","_");
+                    pathfixer = pathfixer.Replace(":","_");
+                    pathfixer = pathfixer.Replace("\"","_");
+                    //pathfixer = pathfixer.Replace("/","_");
+                    //pathfixer = pathfixer.Replace("\\","_");
+                    pathfixer = pathfixer.Replace("|","_");
+                    pathfixer = pathfixer.Replace("?","_");
+                    pathfixer = pathfixer.Replace("*","_");
+                    fixedPaths.Enqueue(pathfixer);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
     }
 }

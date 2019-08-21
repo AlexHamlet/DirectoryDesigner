@@ -74,7 +74,7 @@ namespace FiletoStructure
                     imgWarning.Visibility = Visibility.Visible;
                     btnMakeDir.IsEnabled = false;
                 }
-                if (!OutlineFlag && !txtbxFile.IsFocused && txtbxFile.Text != "")
+                if (!OutlineFlag && DirectoryFlag && FileFlag)
                 {
                     errormessage += "Unable to parse file" + Environment.NewLine;
                     lblReplace.Visibility = Visibility.Visible;
@@ -84,7 +84,7 @@ namespace FiletoStructure
                     cbReplace.Visibility = Visibility.Visible;
                     btnMakeDir.IsEnabled = false;
                 }
-                if(txtbxDir.Text == "" || txtbxFile.Text == "")
+                if (txtbxDir.Text == "" || txtbxFile.Text == "")
                 {
                     btnMakeDir.IsEnabled = false;
                 }
@@ -104,8 +104,6 @@ namespace FiletoStructure
                 if (dir != "")
                 {
                     txtbxDir.Text = dir;
-                    txtbxDir.Focus();
-                    btnFile.Focus();
                 }
             }
             catch (Exception ex)
@@ -123,8 +121,6 @@ namespace FiletoStructure
                 if (file != "")
                 {
                     txtbxFile.Text = file;
-                    txtbxFile.Focus();
-                    btnMakeDir.Focus();
                 }
 
             }
@@ -141,11 +137,18 @@ namespace FiletoStructure
                 if (!Directory.Exists(txtbxDir.Text))
                 {
                     DirectoryFlag = false;
+                    RefreshWarnings();
                     //btnMakeDir.IsEnabled = false;
                 }
                 else
                 {
                     DirectoryFlag = true;
+                    if (FileFlag)
+                    {
+                        OutlineFlag = mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text);
+                        lblPath.Text = "Longest new Path is " + mwl.longestpath + " characters long.";
+                    }
+                    RefreshWarnings();
                 }
             }
             catch (Exception ex)
@@ -161,6 +164,7 @@ namespace FiletoStructure
                 if (!File.Exists(txtbxFile.Text))
                 {
                     FileFlag = false;
+                    RefreshWarnings();
                     //btnMakeDir.IsEnabled = false;
                 }
                 else
@@ -169,8 +173,9 @@ namespace FiletoStructure
                     if (DirectoryFlag)
                     {
                         OutlineFlag = mwl.CheckOutline(txtbxDir.Text, txtbxFile.Text);
-                        lblPath.Text = "Longest new Path is "+mwl.longestpath+" characters long.";
+                        lblPath.Text = "Longest new Path is " + mwl.longestpath + " characters long.";
                     }
+                    RefreshWarnings();
                 }
             }
             catch (Exception ex)
@@ -230,6 +235,26 @@ namespace FiletoStructure
         private void BtnShowMe_Click(object sender, RoutedEventArgs e)
         {
             mwl.ShowMe();
+        }
+
+        private void CbReplace_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if ((bool)cbReplace.IsChecked)
+                {
+                    mwl.FixPaths();
+                    btnMakeDir.IsEnabled = true;
+                }
+                else
+                {
+                    btnMakeDir.IsEnabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong!\n" + ex.ToString());
+            }
         }
 
         private void BtnMakeDir_Click(object sender, RoutedEventArgs e)

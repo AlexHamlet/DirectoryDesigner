@@ -14,7 +14,7 @@
         <Label Content="Select Directory Outline" HorizontalAlignment="Left" Margin="22,80,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnFile" Content="Browse" HorizontalAlignment="Left" Margin="431,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnFile_Click"/>
         <Button x:Name="btnMakeDir" Content="Make Directories" HorizontalAlignment="Left" Margin="22,221,0,0" VerticalAlignment="Top" Width="108" IsEnabled="False" Click="BtnMakeDir_Click"/>
-        <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <CheckBox x:Name="cbReplace" Content="" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Visibility="Hidden" Click="CbReplace_Click"/>
         <TextBlock x:Name="lblReplace" HorizontalAlignment="Left" Margin="58,194,0,0" TextWrapping="Wrap" Text="Replace invalid characters with underscore" VerticalAlignment="Top" Visibility="Hidden"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="431,221,0,0" VerticalAlignment="Top" Width="75" Click="BtnCancel_Click"/>
         <TextBlock x:Name="lblPath" HorizontalAlignment="Left" Margin="180,223,0,0" TextWrapping="Wrap" Text="Longest new Path is 0 characters long." VerticalAlignment="Top"/>
