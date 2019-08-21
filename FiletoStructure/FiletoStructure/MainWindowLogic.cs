@@ -13,10 +13,11 @@ namespace FiletoStructure
     {
         //Holds the characterlength of the longest creatable filepath
         public int longestpath;
+        //Holds wether the outline is able to be fixed
+        public bool creatable;
         //stores valid/invalid paths from the outline
         private Queue<string> validPaths;
         private Queue<string> invalidPaths;
-        private Queue<string> fixedPaths;
         private Queue<string> invalidMessages;
 
         /// <summary>
@@ -25,9 +26,9 @@ namespace FiletoStructure
         public MainWindowLogic()
         {
             longestpath = 0;
+            creatable = false;
             validPaths = new Queue<string>();
             invalidPaths = new Queue<string>();
-            fixedPaths = new Queue<string>();
             invalidMessages = new Queue<string>();
         }
 
@@ -114,6 +115,7 @@ namespace FiletoStructure
                 longestpath = 0;
                 //Used to create filepaths
                 string[] newdir = new string[20];
+                bool invalidchar = false;
                 //Holds return value
                 bool retval = true;
 
@@ -124,31 +126,57 @@ namespace FiletoStructure
                     {
                         //Error Checking
                         linenum++;
+
+                        //Ignore blank lines
+                        if (line.Replace("\t", "") == "")
+                        {
+                            continue;
+                        }
                         //Get subdirectory level
-                        newlevel = line.LastIndexOf("\t") + 1;
+                        //newlevel = line.LastIndexOf("\t") + 1;
+                        int index = 0;
+                        if (line.Length > 1)
+                        {
+                            string indexgrabber = line;
+                            while (indexgrabber.ElementAt(0).ToString() == "\t")
+                            {
+                                indexgrabber = indexgrabber.Remove(0, 1);
+                                index++;
+                            }
+                        }
+                        newlevel = index;
 
                         try
                         {
-                            if (newlevel > 0)
+                            if (line.Contains("<") || line.Contains(">") || line.Contains(":") || line.Contains("\"") ||
+                                line.Contains("/") || line.Contains("\\") || line.Contains("|") || line.Contains("?") || line.Contains("*"))
                             {
-                                newdir[newlevel] = Path.Combine(newdir[newlevel - 1], line.Remove(0, newlevel));
-                                Path.GetFullPath(newdir[newlevel]);
-                                if(newdir[newlevel].Length > longestpath)
-                                {
-                                    longestpath = newdir[newlevel].Length;
-                                }
-                                validPaths.Enqueue(newdir[newlevel]);
+                                line = FixPath(line);
+                                invalidchar = true;
                             }
                             else
                             {
-                                newdir[newlevel] = Path.Combine(dir, line.Remove(0, newlevel));
-                                Path.GetFullPath(newdir[newlevel]);
-                                if (newdir[newlevel].Length > longestpath)
-                                {
-                                    longestpath = newdir[newlevel].Length;
-                                }
-                                validPaths.Enqueue(newdir[newlevel]);
+                                invalidchar = false;
                             }
+                            if (newlevel > 0)
+                            {
+                                //newdir[newlevel] = Path.Combine(newdir[newlevel - 1], line.Remove(0, newlevel));
+                                newdir[newlevel] = Path.Combine(newdir[newlevel - 1], line.Replace("\t", ""));
+                            }
+                            else
+                            {
+                                //newdir[newlevel] = Path.Combine(dir, line.Remove(0, newlevel));
+                                newdir[newlevel] = Path.Combine(dir, line.Replace("/t", ""));
+                            }
+                            if (invalidchar)
+                            {
+                                throw new Exception("Invalid Filepath");
+                            }
+                            if (newdir[newlevel].Length > longestpath)
+                            {
+                                longestpath = newdir[newlevel].Length;
+                            }
+                            validPaths.Enqueue(newdir[newlevel]);
                             sublevel = newlevel;
                         }
                         catch (Exception)
@@ -174,13 +202,10 @@ namespace FiletoStructure
         {
             try
             {
-                while (validPaths.Count > 0)
+                string[] paths = validPaths.Union(invalidPaths).ToArray();
+                foreach (string s in paths)
                 {
-                    Directory.CreateDirectory(validPaths.Dequeue());
-                }
-                while(fixedPaths.Count > 0)
-                {
-                    //Directory.CreateDirectory(fixedPaths.Dequeue());
+                    Directory.CreateDirectory(s);
                 }
             }
             catch (Exception ex)
@@ -200,10 +225,10 @@ namespace FiletoStructure
             {
                 //Echo Error Lines
                 string invalid = "Incorrect Filepath(s)\n";
-
-                while (invalidMessages.Count > 0)
+                string[] im = invalidMessages.ToArray();
+                foreach (string s in im)
                 {
-                    invalid += invalidMessages.Dequeue() + "\n";
+                    invalid += s + "\n";
                 }
 
                 MessageBox.Show(invalid, "Invalid Filepath Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -212,26 +237,21 @@ namespace FiletoStructure
             return "";
         }
 
-        public void FixPaths()
+        public string FixPath(string pathfixer)
         {
             //TODO: Exclude <, >, :, ", /, \, |, ?, *
             try
             {
-                string pathfixer = "";
-                while (invalidPaths.Count > 0)
-                {
-                    pathfixer = invalidPaths.Dequeue();
-                    pathfixer = pathfixer.Replace("<","_");
-                    pathfixer = pathfixer.Replace(">","_");
-                    pathfixer = pathfixer.Replace(":","_");
-                    pathfixer = pathfixer.Replace("\"","_");
-                    //pathfixer = pathfixer.Replace("/","_");
-                    //pathfixer = pathfixer.Replace("\\","_");
-                    pathfixer = pathfixer.Replace("|","_");
-                    pathfixer = pathfixer.Replace("?","_");
-                    pathfixer = pathfixer.Replace("*","_");
-                    fixedPaths.Enqueue(pathfixer);
-                }
+                pathfixer = pathfixer.Replace("<", "_");
+                pathfixer = pathfixer.Replace(">", "_");
+                pathfixer = pathfixer.Replace(":", "_");
+                pathfixer = pathfixer.Replace("\"", "_");
+                pathfixer = pathfixer.Replace("/", "_");
+                pathfixer = pathfixer.Replace("\\", "_");
+                pathfixer = pathfixer.Replace("|", "_");
+                pathfixer = pathfixer.Replace("?", "_");
+                pathfixer = pathfixer.Replace("*", "_");
+                return pathfixer;
             }
             catch (Exception ex)
             {

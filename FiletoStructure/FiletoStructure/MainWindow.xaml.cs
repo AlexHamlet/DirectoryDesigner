@@ -243,7 +243,6 @@ namespace FiletoStructure
             {
                 if ((bool)cbReplace.IsChecked)
                 {
-                    mwl.FixPaths();
                     btnMakeDir.IsEnabled = true;
                 }
                 else
