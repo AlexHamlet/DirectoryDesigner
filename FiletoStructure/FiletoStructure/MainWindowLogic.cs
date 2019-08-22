@@ -15,6 +15,8 @@ namespace FiletoStructure
         public int longestpath;
         //Holds wether the outline is able to be fixed
         public bool creatable;
+        //Holds a message about the outline
+        public string outlineStatus;
         //stores valid/invalid paths from the outline
         private Queue<string> validPaths;
         private Queue<string> invalidPaths;
@@ -107,6 +109,7 @@ namespace FiletoStructure
                 invalidMessages.Clear();
                 //Used to read from the file
                 string line = "";
+                outlineStatus = "";
                 //Used to keep track of the current folder level
                 int sublevel = 0;
                 int newlevel = 0;
@@ -124,30 +127,34 @@ namespace FiletoStructure
                 {
                     while ((line = sr.ReadLine()) != null)
                     {
-                        //Error Checking
-                        linenum++;
-
-                        //Ignore blank lines
-                        if (line.Replace("\t", "") == "")
-                        {
-                            continue;
-                        }
-                        //Get subdirectory level
-                        //newlevel = line.LastIndexOf("\t") + 1;
-                        int index = 0;
-                        if (line.Length > 1)
-                        {
-                            string indexgrabber = line;
-                            while (indexgrabber.ElementAt(0).ToString() == "\t")
-                            {
-                                indexgrabber = indexgrabber.Remove(0, 1);
-                                index++;
-                            }
-                        }
-                        newlevel = index;
-
                         try
                         {
+                            //Error Checking
+                            linenum++;
+
+                            //Ignore blank lines
+                            if (line.Replace("\t", "") == "")
+                            {
+                                continue;
+                            }
+                            //Get subdirectory level
+                            int index = 0;
+                            if (line.Length > 1)
+                            {
+                                string indexgrabber = line;
+                                while (indexgrabber.ElementAt(0).ToString() == "\t")
+                                {
+                                    indexgrabber = indexgrabber.Remove(0, 1);
+                                    index++;
+                                }
+                            }
+                            //Ensures that this directory has a parent directory
+                            if (index > sublevel + 1)
+                            {
+                                throw new InvalidDataException("("+linenum+")"+"Missing folder level");
+                            }
+                            newlevel = index;
+
                             if (line.Contains("<") || line.Contains(">") || line.Contains(":") || line.Contains("\"") ||
                                 line.Contains("/") || line.Contains("\\") || line.Contains("|") || line.Contains("?") || line.Contains("*"))
                             {
@@ -179,6 +186,11 @@ namespace FiletoStructure
                             validPaths.Enqueue(newdir[newlevel]);
                             sublevel = newlevel;
                         }
+                        catch (InvalidDataException ex)
+                        {
+                            outlineStatus = "Missing Parent Directories";
+                            invalidMessages.Enqueue(ex.Message);
+                        }
                         catch (Exception)
                         {
                             retval = false;
@@ -202,10 +214,13 @@ namespace FiletoStructure
         {
             try
             {
-                string[] paths = validPaths.Union(invalidPaths).ToArray();
-                foreach (string s in paths)
+                if (outlineStatus == "")
                 {
-                    Directory.CreateDirectory(s);
+                    string[] paths = validPaths.Union(invalidPaths).ToArray();
+                    foreach (string s in paths)
+                    {
+                        Directory.CreateDirectory(s);
+                    }
                 }
             }
             catch (Exception ex)

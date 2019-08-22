@@ -84,6 +84,10 @@ namespace FiletoStructure
                     cbReplace.Visibility = Visibility.Visible;
                     btnMakeDir.IsEnabled = false;
                 }
+                if(mwl.outlineStatus != "")
+                {
+                    errormessage += mwl.outlineStatus + Environment.NewLine;
+                }
                 if (txtbxDir.Text == "" || txtbxFile.Text == "")
                 {
                     btnMakeDir.IsEnabled = false;
